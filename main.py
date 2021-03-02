@@ -17,9 +17,9 @@ load_dotenv(dotenv_path=env_path)
 token = os.getenv("bot-token")
 
 updater = Updater(token, use_context=True)
-dispatcher = updater.dispatcher
-
 bot = Bot(token)
+
+dispatcher = updater.dispatcher
 
 init = CommandHandler('example', method_example, pass_args=True,pass_chat_data=True)
 start_handler = CommandHandler('start', start)

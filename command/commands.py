@@ -15,6 +15,8 @@ def method_example(update:Update,context:CallbackContext):
 	print(mylist)
 	update.message.reply_text(f'{text}')
 	
+	newFile = update.message.effective_attachment.get_file()
+	newFile.download('new_file.jpg')
 
 def start(update, context):
     context.bot.send_message(
@@ -22,6 +24,7 @@ def start(update, context):
     	text="I'm a bot, please talk to me!"
     	)
 
+    
 class Sender:
 	def __init__(self,bot):
 		self.bot = bot
