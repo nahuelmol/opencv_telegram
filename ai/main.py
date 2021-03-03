@@ -1,22 +1,38 @@
 import numpy as np 
+import nnfs
+from nnfs.datasets import spiral_data
 
-X =[[1,2,3,2.5],
-	[2.0,5.0,-1.0,2.0],
-	[-1.5,2.7,3.3,-0.8]] 
+nnfs.init()
 
 class layer_creator:
-
 	def __init__(self,n_inputs,n_neurons):
 		self.weights = 0.10 *np.random.randn(n_inputs,n_neurons)
 		self.biases = np.zeros((1,n_neurons))
 	def get_output(self,inputs):
 		self.output = np.dot(inputs,self.weights) + self.biases
 
-layer1 = layer_creator(4,5)
-layer2 = layer_creator(5,2)
+class activation_relu:
+	def forward(self,inputs):
+		self.output = np.maximum(0,inputs)
 
-layer1.get_output(X)
-output = layer1.output
-layer2.get_output(output)
+class activation_softmax:
+	def forward(self,inputs):
+		exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
+		probabilities = exp_values / np.sum(exp_values,axis=1, keepdims=True)
+		self.output = probabilities
 
-print(layer2.output)
+X, y = spiral_data(samples=100,classes=3)
+
+dense1 = layer_creator(2,3)
+activation1 = activation_relu()
+
+dense2 = layer_creator(3,3)
+activation2 = activation_softmax()
+
+dense1.get_output(X)
+activation1.forward(dense1.output)
+
+dense2.get_output(activation1.output)
+activation2.forward(dense2.output)
+
+print(activation2.output[:5])
